@@ -26,5 +26,23 @@ module.exports = {
     })
 
     return response.json({ id })
+    },
+
+    async delete (request, response){
+        const { id } = request.params
+
+        // const incident = await connection('feirantes')
+        // .where('id',id)
+        // .first()
+        await connection ('feirantes').where('id',id).delete()
+
+        return response.status (204).send()
+    },
+
+    async indexFiltered (request, response){
+        const { cidade } = request.params
+        // const feirantes = await connection ('feirantes').where('cidade', cidade) *sem tratar Lower e uppercase
+        const feirantes = await connection ('feirantes').whereRaw("LOWER(cidade) LIKE '%' || LOWER(?) || '%'", cidade)        
+        return response.json (feirantes)
     }
 }
