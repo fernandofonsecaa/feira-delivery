@@ -3,6 +3,8 @@ import { Form } from '@unform/web'
 import { Link, useHistory } from 'react-router-dom'
 import { FiArrowLeft} from 'react-icons/fi'
 
+import ViaCep from 'react-via-cep'
+
 import * as Yup from 'yup'
 
 import api from '../../services/api'
@@ -55,7 +57,19 @@ export default function Register(){
             }
         }     
     }
-              
+
+    function onBlurCep(event) {
+        const {value} = event.target
+
+        fetch(`https://viacep.com.br/ws/${value}/json/`)
+        .then((response) => response.json())
+        .then((data) => {
+            formRef.current.setFieldValue('bairro',data.bairro)
+            formRef.current.setFieldValue('cidade',data.localidade)
+            formRef.current.setFieldValue('uf',data.uf)
+        })        
+    }
+            
     return (
         <div className="register-container">
             <div className="content">
@@ -71,14 +85,15 @@ export default function Register(){
                         Voltar para Home
                     </Link>
                </section>
-
+                
                 <Form ref={formRef} onSubmit={handleRegister}>
                     <Input name="nome" placeholder="Nome"/>
                     <Input name="produtos" placeholder="Produtos"/>
                     <Input name="email" placeholder="E-mail"/>
                     <Input name="whatsapp" placeholder="WhatsApp com DDD"/>
+                    <Input name="cep" placeholder="CEP" onBlur={onBlurCep}/>
                     <Input name="bairro" placeholder="Bairro"/>
-
+                    
                     <div className="input-group">
                     <Input name="cidade" placeholder="Cidade"/>
                     <Input name="uf" placeholder="UF" style={{width:80}}/>

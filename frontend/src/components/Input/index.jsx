@@ -1,14 +1,17 @@
 import React, {useEffect, useRef} from 'react'
+
 import {useField} from '@unform/core'
 
 const Input = ({name, ...rest})=>{
     const inputRef = useRef()
     const {fieldName, defaultValue, registerField, error} = useField(name)
+
     useEffect(()=>{
         registerField({
             name: fieldName,
             ref: inputRef.current,
             path: 'value', 
+           
         })
     },[fieldName, registerField])
 
@@ -18,7 +21,7 @@ const Input = ({name, ...rest})=>{
     name={name}
     ref ={inputRef}
     type="text" 
-    placeholder="name"
+    placeholder="name" 
     defaultValue={defaultValue}
     className={error? 'hasError' : ''}
     {...rest}
